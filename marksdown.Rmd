@@ -1,0 +1,155 @@
+---
+title: "FA1 Probability"
+author: "Lindsay Faith Bazar"
+date: "February 1, 2024"
+output: 
+  cleanrmd::html_document_clean:
+    theme: kacit
+---
+1. Write the skewness program, and use it to calculate the skewness coefficient of the four examination subjects in results.txt (results.csv). What can you say about these data?
+
+Pearson has given an approximate formula for the skewness that is easier to calculate than the exact formula given in Equation 2.1.
+
+```{r echo=FALSE}
+knitr::include_graphics("q1.png",error = FALSE)
+```
+
+Write a program to calculate this and apply it to the data in results.txt (results.csv).
+
+```{r}
+results <- read.csv("results.csv",TRUE,",")
+attach(results)
+```
+
+In order to calculate the skewness of the four examination subjects, we have to get the necessary data first such as the mean, median and standard deviation.
+
+**MEAN** 
+```{r}
+mean <- sapply(results[2:5], mean, na.rm = TRUE)
+mean
+```
+
+**MEDIAN**
+```{r}
+median <- sapply(results[2:5], median, na.rm = TRUE)
+median
+```
+
+**STANDARD DEVIATION**
+```{r}
+sd <- sapply(results[2:5], sd, na.rm = TRUE)
+sd
+```
+
+Now that we have the necessary datas, we are now set to solve for the skewness. 
+
+**SKEWNESS**
+```{r}
+skew <- 3 * (mean - median) / sd
+skew
+```
+
+**Is it a reasonable approximation?**
+
+Skewness is a measure of the asymmetry or departure from symmetry in a distribution. Specifically, it indicates whether the distribution is skewed to the left (negative skewness), meaning that the left tail is longer or fatter than the right, or skewed to the right (positive skewness), where the right tail is longer or fatter than the left. The skewness coefficient, which measures how much the data differ from symmetry.  A skewness value of 0 suggests a symmetric distribution. 
+
+As a rule of thumb, if the skewness
+is outside the interval (−1, 1), the data are considered to be highly skewed. If it is
+between −1 and −0.5 or 0.5 and 1, the data are moderately skewed.
+
+These skewness values above are relatively close to zero, indicating that the skewness is not pronounced. In addition, it can be observed that the medians are not too far away from their respective means. When the mean and median are close in value, it suggests that the central tendency of the data is well-balanced. In the dataset, this implies that the middle values are representative of the dataset, and there are no extreme outliers pulling the mean away from the median. Given the skewness values close to zero and the proximity of means to medians, therefore, it can be considered a reasonable approximation. 
+
+
+
+2.  For the class of 50 students of computing detailed in Exercise 1.1-
+
+**Here's the context for Exercise 1.1**
+
+Among those mentioned 50 students of computing, 23 are female and 27 are male. The result of their first-year Java programming are as follows:
+
+```{r}
+marks <- c(57, 59, 78, 79, 60, 65, 68, 71, 75, 48, 51, 55, 56, 41, 43,
++            +            +            44, 75, 78, 80, 81, 83, 83, 85, 48, 49, 49, 30, 30, 31, 32, 35, 37, 41, 86, 42, 51, 53, 56, 42, 44, 50, 51, 65, 67, 51, 56, 58, 64, 64, 75)
+```
+
+Then we store them into two vectors, one for each gender: male and female
+
+**Female**
+
+```{r}
+females <- (marks [1:23])
+females
+```
+
+**Male**
+```{r}
+males <- (marks [24:50])
+males
+```
+
+However, it was discovered that the mark for the 34th student was entered incorrectly and should have been 46 instead of 86. 
+
+Hence, we used an appropriate procedure to change this:
+
+```{r}
+marks[34] <- 46
+```
+
+In order to guarantee that the 34th student's mark was changed accordingly, we will checked the current value of marks.
+
+```{r}
+marks
+```
+As you can see, if we count until the 34th, the number is now 46 as indicated   .
+
+Now we use R to:
+
+(a)  form the stem-and-leaf display for each gender, and discuss the advantages of this representation compared to the traditional histogram;
+
+**Female Stem-and-Leaf Display**
+
+```{r}
+stem(females)
+```
+**Male Stem-and Leaf-Display**
+
+```{r}
+stem(males)
+```
+
+**The advantage of the stem-and-leaf display compared to the traditional histogram**
+
+The stem-and-leaf display breaks down each data point into a "stem" (the leftmost digit or digits) and a "leaf" (the rightmost digit), which allows for a detailed representation of the data, showing both the overall pattern and the specific values.  Unlike a stem-and-leaf display, a histogram organizes the data into intervals called bins and represents the frequency or count of data points falling into each bin. This is where the advantage of stem-and-display comes into play. In stem-and-leaf display, each data point is shown, making it easier to read and interpret specific values. Unlike in histogram which summarizes data into bins, which loses the granularity of individual data points and which might obscure the presence of outliers or specific values. 
+
+Most importantly, since our data sample is small, it can be a more compact way to represent the data. 
+
+(b)  construct a box-plot for each gender and discuss the findings. 
+
+```{r}
+par(mfrow = c(1, 2))
+boxplot(females, main = "Females", ylab = "Marks", col = "pink", border = "black")
+boxplot(males, main = "Males", ylab = "Marks", col = "lightblue", border = "black")
+```
+*Figure 1.1 Uncorrected Data*
+
+Figure 1.1 allows us to compare the examination results between the male and female students in computing. It shows, for example, that the marks are higher in
+female. Notice also in Fig. 1.1 that there are points outside the whiskers of the boxplot in
+Males. These points represent cases over 1.5 box lengths from
+the upper or lower end of the box and are called outliers. These outliers are regarded as uncommon in the overall dataset, exhibiting either exceptionally low or exceptionally high values in comparison to the majority of the data.
+
+Recall the instance where a check on the examination results of the 34th's student marks should have been 46 and not 86? It might be the reason for the outlier.
+
+This code below is to correct the data. It is 34th from all genders but if we checked, the 34th student is a male, which matched the outlier in Fig 1.1.
+
+```{r}
+males[11] <- 46
+```
+
+```{r}
+par(mfrow = c(1, 2))
+boxplot(females, main = "Females", ylab = "Marks", col = "pink", border = "black")
+boxplot(males, main = "Males", ylab = "Marks", col = "lightblue", border = "black")
+```
+*Figure 1.2 Corrected Data*
+
+After making the correction, it can be observed in Fig 1.2 that there is no longer an outlier in the male's boxplot. The boxplot is used as a graphical to show that a boxplot can also be a data validation tool. Although it is possible that one student can score significantly higher than the rest of its peers,a boxplot is one way to highlight the possibility of an error. 
