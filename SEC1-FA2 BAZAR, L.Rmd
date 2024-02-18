@@ -1,0 +1,59 @@
+---
+title: "FA2 Probability"
+author: "Lindsay Faith C. Bazar"
+date: "February 18, 2024"
+output: 
+  cleanrmd::html_document_clean:
+    theme: kacit
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 1. Use R to illustrate that the probability of getting:
+
+a\) a `head` is 0.5 if a fair coin is tossed repeatedly;
+
+```{r}
+toss <- sample(c( "H","T"), 15000, replace = TRUE)
+
+table(toss) / 15000
+```
+
+We set the number of tosses to 15000 to make sure that we get closer to 0.5 as each run will vary and increasing the number of tosses will generally increase the accuracy of estimating the expected value of probability.
+
+b\) a `red` card is 0.5 if cards are drawn repeatedly with replacement from awell-shuffled deck;
+
+```{r}
+cards <- sample(c("Red", "Black"), 15000, replace = TRUE, prob = c(0.5, 0.5))
+
+table(cards) / 15000
+
+plot <- table(cards) / length(cards)
+
+barplot(plot, main = "Distribution of Cards", xlab = "Card Type", ylab = "Proportion", names.arg = c("Red", "Black"), col = c("red", "black"),ylim = c(0, 1))
+
+```
+
+c\) an `even` number is 0.5 if a fair die is rolled repeatedly.
+
+```{r}
+
+die <- sample(1:6, 15000, replace = TRUE)
+
+even <- sum(die %% 2 == 0)
+odd <- sum(die %% 2 != 0)
+
+peven <- even / length(die)
+podd <- odd / length(die)
+
+result <- data.frame(Even = peven, Odd = podd)
+result
+
+barplot(t(result), beside = TRUE, col = c("blue", "red"),
+        ylim = c(0, 1), main = "Proportion of Even and Odd Outcomes",
+        xlab = "Outcome", ylab = "Proportion", legend.text = TRUE)
+legend("topright", legend = c("Even", "Odd"), fill = c("blue", "red"))
+
+```
