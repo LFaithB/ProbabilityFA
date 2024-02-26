@@ -1,0 +1,121 @@
+---
+title: "FA3 Probability"
+author: "Lindsay Faith Bazar"
+date: "February 26, 2024"
+output: 
+  cleanrmd::html_document_clean:
+    theme: kacit
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**2.  A binary communication channel carries data as one of two sets of signals denoted by 0 and 1. Owing to noise, a transmitted 0 is sometimes received as a 1, and a transmitted 1 is sometimes received as a 0. For a given channel, it can be assumed that a transmitted 0 is correctly received with probability 0.95, and a transmitted 1 is correctly received with probability 0.75. Also, 70% of all messages are transmitted as a 0. If a signal is sent, determine the probability that:**
+
+*(a) a 1 was received;*
+
+To answer this given question, let us first denote the given probabilities:
+
+The probability of receiving 0 given that 0 was transmitted is 0.95 denoted as `R0`:
+
+```{r}
+R0 <- 0.95
+```
+
+The 0.75 probability of receiving 1 given that 1 was transmitted and denoted as `R1`:
+
+```{r}
+R1 <- 0.75  
+
+```
+
+The 0.70 probability of transmitting 0 denoted as `T0`:
+
+```{r}
+T0 <- 0.70          
+```
+
+And lastly, the 0.30 probability of transmitting 1 denoted as `T1`:
+
+```{r}
+T1 <- 0.30          
+```
+
+We will denote the probability that a 1 was received as `R1Prob`. 
+
+To find the probability, we can use the law of total probability:
+
+
+```{r}
+R1Prob <- (1 - R0) * T0 + R1 * T1
+R1Prob
+```
+
+So, the probability that a 1 was received is `0.26`.
+
+Now that we solved the probability of receiving 1, we can use Baye's theorem to find the probability of transmitting 1 when 1 is received.
+
+*(b) a 1 was transmitted given than a 1 was received.*
+
+We will denote this as `TR1`:
+
+```{r}
+TR1 <- R1 * T1 / R1Prob
+TR1
+```
+
+So, the probability that a 1 was transmitted given that a 1 was received is approximately `0.865`.
+
+**7.  There are three employees working at an IT company: Jane, Amy, and Ava, doing 10%, 30%, and 60% of the programming, respectively. 8% of Jane’s work, 5% of Amy’s work, and just 1% of Ava‘s work is in error.** 
+
+*What is the overall percentage of error?* 
+
+To find the overall percentage of error, let's first calculate the weighted error percentages for each employees based on their work contribution and percent of error.
+
+`Jane`  
+Error rate: 8%  
+Work contribution: 10% 
+
+```{r}
+Jane <- .08 * .10 * 100
+Jane
+```
+
+
+`Amy`  
+Error rate: 5%  
+Work Contribution: 30%
+
+```{r}
+Amy <- .05 * .30 * 100
+Amy
+```
+
+`Ava`  
+Error rate: 1%  
+Work Contribution: 60%
+
+```{r}
+Ava <- .01 * .60 * 100
+Ava
+```
+
+Now that we have solved the weighted error percentages for each of the employees, we can sum these values up to solve for the overall percentage of error.
+```{r}
+error <- Jane + Amy + Ava
+error
+```
+
+So, the overall percentage of error is `2.9%`.
+
+*If a program is found with an error, who is the most likely person to have written it?*
+
+To find the person who most have likely written an error, we can compare each of the employees error percentages:
+
+Jane: `0.8%`  
+Amy: `1.5%`  
+Ava: `0.6%`
+
+Since Amy has the highest percentage of error (1.5%), `Amy` is the most likely person to have written a program with an error. 
+
