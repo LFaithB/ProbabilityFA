@@ -1,0 +1,153 @@
+---
+title: "FA7 Probability"
+author: "Lindsay Faith Bazar"
+date: "February 29 2024"
+output: 
+  cleanrmd::html_document_clean:
+    theme: kacit
+---
+library("stats")
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+**1. Records show that job submissions to a computer center have a Poisson distribution with an average of four per minute. Let T be the time in minutes between submissions. Use R to calculate the probability of:**
+
+*a) P(T ≤ 0.25) = P(time between submissions is at most 15 seconds)*
+
+Let us first denote the rate of submission per minute as `spm` and set it to 4:
+
+```{r}
+spm <- 4 
+```
+
+Then we will use the pexp() function to calculate the probabilities for each scenario, in this case, the time between submissions is less than or equal to 0.25 minutes (equivalent to 15 seconds):
+
+
+```{r}
+p25 <- pexp(0.25, rate = spm)
+p25 * 100
+```
+
+The probability that the time between submissions is at most 15 seconds is approximately `63.21%`.
+
+*b) P(T > 0.5) = P(time between submissions is greater than 30 seconds)*
+
+```{r}
+p5 <- 1 - pexp(0.5, rate = spm)
+p5 * 100
+```
+
+The probability that the time between submissions is greater than 30 seconds is approximately `13.53%`.
+
+*c) P(0.25 < T < 1) = P(time between submissions is between 15 seconds
+and 1 minute).*
+
+```{r}
+p25to1 <- pexp(1, rate = spm) - pexp(0.25, rate = spm)
+p25to1 * 100
+```
+
+The probability that the time between submissions is between 15 seconds and 1 minute is approximately `34.95%`
+
+**3) The average rate of job submissions in a computer center is 2 per minute. If it can be assumed that the number of submissions per minute has a Poisson distribution, calculate the probability that:**
+
+Let's denote first the submission per minute as `subpm` and set it to 2:
+
+```{r}
+subpm <- 2
+```
+
+Then we will use the `ppois()` function which calculates the cumulative distribution function (CDF) of a Poisson distribution:
+
+
+*a) more than two jobs will arrive in a minute*
+
+```{r}
+prob2 <- 1 - ppois(2, subpm)
+prob2 * 100
+```
+
+
+*b) at least 30 seconds will elapse between any two jobs *
+
+We converted the 30 seconds to minutes (0.5 minutes) since the rate (λ) is given in submissions per minute.
+
+```{r}
+probm30 <- pexp(0.5, rate = subpm)
+probm30 * 100
+```
+
+*c) less than 30 seconds will elapse between job *
+
+This is just the complement of the probability calculated in part (b) and the complement is calculated by subtracting the probability of 30 seconds or more from 1.
+
+```{r}
+probl30 <- 1 - probm30
+probl30 * 100
+```
+
+*d) a job will arrive in the next 30 seconds, if no jobs have arrived in the last
+30 seconds.* 
+
+This is similar to part (b), but here we're interested in the probability of a job arriving within the next 30 seconds. 
+
+We calculate the complement of the probability of no job arriving in the next 30 seconds.
+
+```{r}
+probnext30 <- 1 - pexp(0.5, rate = subpm)
+probnext30
+```
+
+**7) A website receives an average of 15 visits per hour, which arrive following a Poisson distribution.**
+
+Let's first denote the average visit per hour as `avph` and then set it to 15:
+
+```{r}
+avph <- 15
+```
+
+*a) Calculate the probability that at least 10 minutes will elapse without a visit.*
+
+For the time, we converted the 10 minutes to hour by dividing it to 60 as there are 60 minutes in one hour. Then we use the Poisson distribution's probability mass function `(dpois)`to find the probability of having zero visits in this time interval.
+
+```{r}
+time <- 10/60
+prob10 <- 1 - dpois(0, avph * time)
+prob10 * 100
+```
+
+The probability that at least 10 minutes will elapse without a visit is approximately `91.79%`
+
+*b) What is the probability that in any hour, there will be less than eight visits? *
+
+Since it was indicated to be less than, we count one less on 8 which is 7.
+
+```{r}
+probl8 <- ppois(7, avph)
+probl8 * 100
+```
+
+The probability of having less than eight visits in an hour is approximately `1.80%`.
+
+*c) Suppose that 15 minutes have elapsed since the last visit, what is the probability that a visit will occur in the next 15 minutes. *
+
+We converted minutes into hours to fit with the Poisson distribution.We then use the cumulative distirbution function. 
+
+```{r}
+timevisit <- 15/60 
+probnextvisit <- ppois(1, avph * timevisit)
+probnextvisit * 100
+```
+
+The probability of a visit occurring in the next 15 minutes, given that 15 minutes have already passed without a visit, is approximately `11.17%`
+
+*d) Calculate the top quartile, and explain what it means *
+
+We will use the quantile function (qpois)` to find the value at the 75th percentile of the distribution.
+```{r}
+topquartile <- qpois(0.75, avph)
+topquartile
+```
+
+The top quartile, or the 75th percentile, of the distribution is `18`. This means that 75% of the time, the number of visits in an hour is 18 or fewer. In other words, the top quartile represents the threshold beyond which the number of visits becomes less frequent.
