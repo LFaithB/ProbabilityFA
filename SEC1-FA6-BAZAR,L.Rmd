@@ -1,0 +1,98 @@
+---
+title: "FA6 Probability"
+author: "Lindsay Faith Bazar"
+date: "February 29 2024"
+output: 
+  cleanrmd::html_document_clean:
+    theme: kacit
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**I. Geometric Distribution. Provide an R code for the geometric distribution. The geometric distribution is a probability distribution that models the number of trials required to achieve the first success in a sequence of Bernoulli trials, where each trial has a constant probability of success.**
+
+*1) Set the probabilities of success:*
+
+```{r}
+p <- 0.2
+```
+
+*2) Generate 1000 random variables from the geometric distribution:*
+
+In this case, We will use the `(rgeom)` function to generate random numbers from geometric distribution.`
+
+```{r}
+x <- rgeom(1000, prob = p)
+```
+
+*3) Calculate some basic statistics:*
+
+```{r}
+mean_x <- mean(x)
+var_x <-var(x)
+sd_x <- sd(x)
+```
+
+We will then use the `which.min(x)` function to find the index of the first occurrence of the minimum value in the vector x. Since x contains the number of trials until success for each simulation, which means that which.min(x) effectively gives us the index of the first success in the trial.
+
+```{r}
+trial <- which.min(x)
+```
+
+*4) Print the result in item 3 with the following output(string):*
+
+```{r}
+
+cat("Number of trials required to achieve first success: ", trial, "\n")
+cat("Mean (in 2 decimal places): ", sprintf("%.2f", mean_x), "\n", sep = "")
+cat("Variance (in 2 decimal places): ", sprintf("%.2f", var_x), "\n", sep = "")
+cat("Standard Deviation (in 2 decimal places): ", sprintf("%.2f", sd_x), "\n", sep = "")
+```
+
+*5) Plot the histogram of the results.*
+
+```{r}
+hist(x, breaks = 20, main = "Histogram of Geometric Distribution", xlab = "Number of Trials", ylab = "Frequency", col = "pink")
+```
+
+**II. Hypergeometric Distribution.  Consider a plant manufacturing IC chips of which 10% are expected to be defective. The chips are packed in boxes for export. Before transportation, a sample is drawn from each box. Estimate the probability that the sample contains more than 10% defectives, when:**
+
+*1) A sample of 10 is selected from a box of 40;*
+
+We have set the values for `N`(total number of chips in the box), `K`  (expected number of defective chips), and `n` (the sample size). Then we use the `(phyper)` function which calculates the cumulative probability of having up to a certain number of defective chips in the sample according to the hypergeometric distribution.
+
+```{r}
+
+N <- 40 
+K <- 0.1 * N  
+n <- 10  
+
+prob0 <- dhyper(0, K, N - K, n)
+prob1 <- dhyper(1, K, N - K, n)
+
+prob10 <- 1 - (prob0 + prob1)
+prob10 * 100
+
+```
+
+The probability of having more than 10% defectives in a sample of 10 selected from a box of 40 is `25.58%` 
+
+*2) A sample of 10 is selected from a box of 5000.*
+
+```{r}
+
+N <- 5000  
+K <- 0.1 * N  
+n <- 10  
+
+prob0 <- dhyper(0, K, N - K, n)
+prob1 <- dhyper(1, K, N - K, n)
+
+prob10 <- 1 - (prob0 + prob1)
+prob10 * 100
+
+```
+
+The probability of having more than 10% defectives in a sample of 10 selected from a box of 5000 is `26.38%` 
