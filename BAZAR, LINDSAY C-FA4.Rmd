@@ -1,0 +1,124 @@
+---
+title: "FA4 Probability"
+author: "Lindsay Faith Bazar"
+date: "February 3 2024"
+output: 
+  cleanrmd::html_document_clean:
+    theme: kacit
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**5) A geospatial analysis system has four sensors supplying images. The percentage of images supplied by each sensor and the percentage of images relevant to a query are shown in the following table.**
+
+
+```{r}
+sensor <- data.frame(
+  sensors = c(1, 2, 3, 4),
+  percentImages = c(15, 20, 25, 4),
+  percentRelevantImages = c(50, 60, 40, 85)
+)
+
+```
+
+```{r}
+print(sensor)
+```
+
+***What is the overall percentage of relevant images?***
+
+In order to find the overall percentage of relevant images, we first need to calculate the `weighted sum of the relevant images` and `the sum of the percentages of images` supplied by each sensor.
+
+The weighted sum of the relevant images will be calculated through this formula:
+
+`weightedSum = ∑(percentImages × percentRelevantImages) / 100` 
+
+Translating this into R code would be:
+
+```{r}
+weightedsum <- sum(sensor$percentImages * sensor$percentRelevantImages) / 100
+```
+
+Then we calculate the sum of the percentages of images supplied by all sensors.
+```{r}
+sumpercentages <- sum(sensor$percentImages)
+```
+
+Now that we have all that we need, we can now use the formula for the overall percentage of relevant images:
+
+```{r}
+overallPercentage <- weightedsum / sumpercentages * 100
+```
+
+```{r}
+overallPercentage
+```
+
+`The overall percentage of relevant images would be 51.41%`
+
+**6. A fair coin is tossed twice.**
+
+**Let E₁ be the event that both tosses have the same outcome, that is E₁ = (HH,TT).**  
+**Let E₂ be the event that the first toss is a head, that is, E₂ = (HH, HT)**  
+**Let E₃ be the event that the second toss is a head, that E₃ = (TH, HH)**.  
+**Show that E₁, E₂, and E₃, are pairwise independent but not mutually independent.**
+
+The sample space is the set of all possible outcomes when tossing a fair coin twice. It includes all possible combinations of heads (H) and tails (T) for the two tosses as coded below.
+
+```{r}
+sampleSpace <- c("HH", "HT", "TH", "TT")
+```
+
+Then we will list each individual events and denote it as `E1`,`E2`, and, `E3` respectively, wherein each event represents a set of outcomes from tossing a fair coin twice. For example, E1 consists of the outcomes where both tosses result in heads (HH) or both result in tails (TT), and similarly for E2 and E3.
+
+```{r}
+E1 <- c("HH", "TT")
+E2 <- c("HH", "HT")
+E3 <- c("HH", "TH")
+```
+
+Next, we will be calculating the probabilities of each individual event (PE1, PE2, PE3). This is done by dividing the number of outcomes in each event (which is the length of E1, E2, E3) by the total number of outcomes in the sample space (length of sampleSpace).
+
+```{r}
+PE1 <- length(E1) / length(sampleSpace)
+PE2 <- length(E2) / length(sampleSpace)
+PE3 <- length(E3) / length(sampleSpace)
+```
+
+Then, the calculation of the probabilities of the intersections of the events. For example, PE1E2 represents the probability of both events E₁ and E₂ happening at the same time. This is calculated by finding the number of outcomes that are common to both E₁ and E₂ (using the `intersect` function), and then dividing by the total number of outcomes in the sample space as coded below.
+
+```{r}
+PE1E2 <- length(intersect(E1, E2)) / length(sampleSpace)
+PE1E3 <- length(intersect(E1, E3)) / length(sampleSpace)
+PE2E3 <- length(intersect(E2, E3)) / length(sampleSpace)
+PE1E2E3 <- length(intersect(intersect(E1, E2), E3)) / length(sampleSpace)
+```
+
+Next is to check for pairwise independence wherein we will compare each probability of intersection with the product of the corresponding individual probabilities. If all of these comparisons hold true, that is if each pair of events is independent, then pairwiseIndependence will be TRUE; otherwise, it will be FALSE.
+
+```{r}
+pairwiseIndependence <- PE1E2 == PE1 * PE2 &&
+                        PE1E3 == PE1 * PE3 &&
+                        PE2E3 == PE2 * PE3
+
+```
+
+Next that we check is mutual independence which is done by comparing the probability of the intersection of all events with the product of all individual probabilities. If this comparison holds true, that is if all events are mutually independent, then mutualIndependence will be TRUE; otherwise, it will be FALSE.
+
+```{r}
+mutualIndependence <- PE1E2E3 == PE1 * PE2 * PE3
+```
+
+`PAIRWISE INDEPENDENCE`
+```{r}
+pairwiseIndependence
+```
+
+`MUTUAL INDEPENDECE`
+```{r}
+mutualIndependence
+```
+
+Since pairwise independence holds `TRUE` and mutual independence holds `FALSE`, we have shown that E₁, E₂, and E₃, are pairwise independent but not mutually independent.
