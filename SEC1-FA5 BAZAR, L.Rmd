@@ -1,0 +1,177 @@
+---
+title: "FA5 Probability"
+author: "Lindsay Faith Bazar"
+date: "March 03 2024"
+output: 
+  cleanrmd::html_document_clean:
+    theme: kacit
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+percentoferrors <- c(1, 2, 1.5)  
+percentofmessages <- c(40, 25, 35) 
+
+
+table <- data.frame(Server = c("Server 1", "Server 2", "Server 3"),
+                 `Percentage of Messages` = percentofmessages,
+                 `Percentage of Errors` = percentoferrors)
+
+```
+
+**6) An email message can travel through one of three server routes. The percent- age of errors in each of the servers and the percentage of messages that travel through each route are shown in the following table. **
+
+```{r}
+
+table
+
+```
+
+**Assume that the servers are independent.**
+
+*(a) Probability of receiving an email containing an error*
+
+Let's first convert the percentage to decimal by dividing the probability of the server and the message by a hundred. 
+
+Next, we will designate `proboferrors` and `probofmessages`, respectively, for the probability of errors and messages. The message probability includes the message probability for each server, and the error probability includes the error probabilities for each server.
+
+To calculate for the overall probability of receiving an email containing an error denoted as `proboferror`, we will take the sum of the product of proboferrors and probofmessages. 
+
+```{r}
+proboferrors <- percentoferrors / 100
+probofmessages <- percentofmessages / 100
+
+proboferror <- sum(proboferrors * probofmessages)
+
+proboferror * 100
+```
+
+The probability of receiving an email containing an error is `1.425%`  
+
+*(b) Probability that a message will arrive without error*
+
+The probability of a message with no error is denoted as `probofnoerror`. Since the probability of no error is just the complement of receiving a message containing an error, it is therefore calculated as 1 minus the `proboferror`.
+
+```{r}
+probofnoerror <- 1 - proboferror
+
+probofnoerror * 100 
+
+```
+
+The probability that a message will arrive without error is `98.575%`
+
+*(c) Probability that if a message arrives without error, it was sent through server 1*
+
+`probofserver1noerror`calculates the conditional probability that if a message arrives without error, it was sent through server 1. This is done by taking the probability of no error for server 1 `(1 - proboferrors[1])`, multiplying it by the probability of the message being sent through server 1 `(probofmessages[1])`, and dividing it by the overall probability of no error `(probofnoerror)`. This gives us the probability of the message being sent through server 1 given that it arrived without error.
+
+```{r}
+
+probofserver1noerror <- (1 - proboferrors[1]) * probofmessages[1] / probofnoerror
+
+probofserver1noerror * 100
+
+```
+
+The probability that if a message arrives without error, it was sent through server 1 is approximately `40.17%`
+
+**9) A software company surveyed managers to determine the probability that they would buy a new graphics package that includes three-dimensional graphics. About 20% of office managers were certain that they would not buy the package, 70% claimed that they would buy, and the others were undecided. Of those who said that they would not buy the package, only 10% said that they were interested in upgrading their computer hardware. Of those interested in buying the graphics package, 40% were also interested in upgrading their computer hardware. Of the undecided, 20% were interested in upgrading their computer hardware.**
+
+
+*Let A denote the intention of not buying,*
+
+```{r}
+A <- 0.20
+```
+
+*B the intention of buying,*
+
+```{r}
+B <- 0.70
+```
+
+*C the undecided,*
+
+```{r}
+C <- 0.10
+```
+
+*and G the intention of upgrading the computer hardware.*
+
+```{r}
+PofGA <- 0.10
+PofGB <- 0.40
+PofGC <- 0.20
+```
+
+*(a) Calculate the probability that a manager chosen at random will not upgrade the computer hardware (P(G̅)).*
+
+To calculate the probability that a manager chosen at random will not upgrade the computer hardware (P(G̅)), we need to consider the complement of the event that a manager will upgrade the computer hardware (P(G)), which means we will need to find (P(G)) first.
+
+We can use the law of total probability to calculate P(G) denoted as `PofG`:
+
+```{r}
+PofG <- PofGA * A + PofGB * B + PofGC * C
+
+PofG
+```
+
+Now that we have solved P(G), we can now find the complement (P(G̅). 
+
+```{r}
+
+PofnotG <- 1 - PofG
+
+PofnotG
+```
+
+The probability that a manager chosen at random will not upgrade the computer hardware is `68%`
+
+*(b) Explain what is meant by the posterior probability of B given G, P(B|G). *
+
+The posterior probability of B given G, P(B|G), represents the probability of a manager intending to buy the package given that they are interested in upgrading their computer hardware.
+
+**13) A malicious spyware can infect a computer system though the Internet or through email. The spyware comes through the Internet 70% of the time and 30% of the time, it gets in through email. If it enters via the Internet the anti-virus detector will detect it with probability 0.6, and via email, it is detected with probability 0.8.**
+
+*(a) What is the probability that this spyware infects the system?*
+
+`PofI` represents the probability of a malicious spyware entering through the Internet, `PofE` represents the probability of spyware entering through email, `PDwithI` represents the probability of detection given it entered through the Internet, and `PDwithE` represents the probability of detection given it entered through email.
+
+
+```{r}
+
+PofI <- 0.7  
+PofE <- 0.3  
+PDwithI <- 0.6  
+PDwithE <- 0.8  
+
+```
+
+To calculate the probability that the spyware infects the system, we use the law of total probability to find the probability of a spyware infecting the system.
+
+```{r}
+
+spyware <- PofI * PDwithI + PofE * PDwithE
+
+spyware * 100
+```
+
+The probability that the spyware infects the system is `66%`
+
+*(b) If the spyware is detected, what is the probability that it came through the Internet?*
+
+`PofDI` is the probability of getting detected through the Internet. We use Bayes' theorem to calculate the probability that the spyware came through the Internet given that it's detected.
+
+```{r}
+
+PofDI <- (PDwithI * PofI) / spyware
+
+PofDI * 100
+
+```
+
+The probability of a spyware being detected and it came through the Internet is approximately `63.64%`
